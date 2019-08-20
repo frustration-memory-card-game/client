@@ -16,7 +16,14 @@ html {
 }
 
 .cards > div {
-  background-color: blue;
+  background: url(/img/cardback.png);
+  background-size: 100% 100%;
+  background-position: center;
   height: 22vh;
   width: 17vw;
+  text-align: center;
+  color: white;
+  border: solid 10px pink;
+  border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
