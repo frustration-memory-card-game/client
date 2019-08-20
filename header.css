@@ -1,0 +1,18 @@
+header {
+  font-size: 1.5rem;
+  padding: 3vh 1.5rem;
+  background-color: pink;
+}
+
+header > section {
+  display: inline-block;
+  width: 49%;
+}
+
+.leftHeader {
+  text-align: left;
+}
+
+.rightHeader {
+  text-align: right;
+}
