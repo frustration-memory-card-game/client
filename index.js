@@ -45,6 +45,7 @@ function resetGame() {
   for (let i = 0; i < 12; i++) {
     const card = document.createElement('div');
     card.id = `card${i}`;
+    card.addEventListener('click', () => flipCard(i));
     gameBoard.appendChild(card);
     cardArray[i] = {
       id: `card${i}`,
@@ -55,4 +56,10 @@ function resetGame() {
     };
   }
   console.log(cardArray);
+}
+
+// Function called when a card is clicked
+// The game functions should be in here
+function flipCard(cardId) {
+    console.log(cardId);
 }
