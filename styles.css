@@ -1,0 +1,22 @@
+@import 'reset.css';
+@import 'header.css';
+
+html {
+  font-size: 1.25vw;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-row-gap: 5vh;
+  grid-column-gap: 2.5vw;
+  place-items: center;
+  place-content: center;
+  margin: 5vh 2.5vw;
+}
+
+.cards > div {
+  background-color: blue;
+  height: 22vh;
+  width: 17vw;
+}
