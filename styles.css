@@ -2,7 +2,7 @@
 @import 'header.css';
 
 html {
-  font-size: 1.25vw;
+  font-size: 1.25vmax;
 }
 
 .cards {
