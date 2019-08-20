@@ -1,4 +1,7 @@
+// Gets game board from our html
 const gameBoard = document.getElementById('gameBoard');
+
+// Initializes cards and values
 const cardArray = [];
 const cardValues = [
   'king',
