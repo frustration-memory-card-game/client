@@ -1,15 +1,33 @@
+const GAME_SECONDS = 5;
+class Card {
+  constructor(rank, image) {
+    this.rank = rank;
+    this.image = image;
+  }
+}
+
+class CardInfo {
+  constructor(cardId, value, howToFlip = '', flipped = false, shown = true) {
+    this.id = `card${cardId}`;
+    this.value = value;
+    this.howToFlip = howToFlip;
+    this.flipped = flipped;
+    this.shown = shown;
+  }
+}
+
 // Gets game board from our html
 const gameBoard = document.getElementById('gameBoard');
 
 // Initializes cards and values
-const cardArray = [];
+const gameCards = [];
 const cardValues = [
-  'king',
-  'queen',
-  'dairy queen',
-  'burger king',
-  'lofi',
-  'robot'
+  new Card('king', '/img/king.jpg'),
+  new Card('queen', '/img/queen.jpg'),
+  new Card('joker', '/img/joker.jpg'),
+  new Card('burger', '/img/burger.jpg'),
+  new Card('lofi', '/img/lofi.jpg'),
+  new Card('robot', 'img/robot.jpg')
 ];
 
 // Create our deck
@@ -17,24 +35,24 @@ let deck = [...cardValues, ...cardValues];
 
 // Initialize game
 resetGame();
-doTimer();
+startTimer(GAME_SECONDS);
 
-// Counts down from 5 to zero and then sends alert at timeout
-function doTimer() {
-  for (let i = 0; i <= 5; i++) {
+// Counts down to zero and then sends alert at timeout
+function startTimer(seconds) {
+  for (let i = 0; i <= seconds; i++) {
     const timer = document.getElementById('timer');
     setTimeout(() => {
       timer.innerHTML = i;
-    }, (5 - i) * 1000);
+    }, (seconds - i) * 1000);
   }
-  setTimeout(myAlert, 5001);
+  setTimeout(loseGame, seconds * 1000 + 100);
 }
 
 // Alerts the player that they lost
-function myAlert() {
+function loseGame() {
   alert('You lose!');
   resetGame();
-  doTimer();
+  startTimer(GAME_SECONDS);
 }
 
 // Resets the game
@@ -45,17 +63,15 @@ function resetGame() {
   for (let i = 0; i < 12; i++) {
     const card = document.createElement('div');
     card.id = `card${i}`;
+<<<<<<< HEAD
     card.addEventListener('click', () => flipCard(i));
+=======
+    card.innerHTML = i;
+>>>>>>> 9eb5e97f5d92523fc1aa7992c04b03fa10ba81ee
     gameBoard.appendChild(card);
-    cardArray[i] = {
-      id: `card${i}`,
-      value: deck[i],
-      image: '',
-      flipped: false,
-      matched: false
-    };
+    gameCards[i] = new CardInfo(i, deck[i]);
   }
-  console.log(cardArray);
+  console.log(gameCards);
 }
 
 // Function called when a card is clicked
