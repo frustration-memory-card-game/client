@@ -29,6 +29,10 @@ const cardValues = [
   new Card('lofi', '/img/lofi.jpg'),
   new Card('robot', 'img/robot.jpg')
 ];
+let currentCard = {
+    id: '',
+    value: '',
+};
 
 // Create our deck
 let deck = [...cardValues, ...cardValues];
@@ -74,5 +78,31 @@ function resetGame() {
 // Function called when a card is clicked
 // The game functions should be in here
 function flipCard(cardId) {
-  console.log(cardId);
+    console.log(gameCards[cardId]);
+    console.log(gameCards[cardId].value.rank);
+    // Flips selected card face up
+    gameCards[cardId].flipped = true;
+    // Checks if first card
+    if(currentCard.value === ''){
+        // Sets selected card as current card
+        currentCard.value = gameCards[cardId].value.rank;
+        currentCard.id = cardId;
+    } else if(currentCard.value === gameCards[cardId].value.rank ){ //Checks if card matchs current card
+        // make both cards disappear
+        // TODO: Pass up shown as an attribute
+        gameCards[cardId].shown = false;
+        gameBoard[currentCard.id].shown = false;  
+        gameCards[cardId].flipped = false;
+        gameBoard[currentCard.id].flipped = false;  
+        // clear current card
+        currentCard.id = '';
+        currentCard.value = '';
+    } else {
+        // Flips current card and selected card "face down"
+        gameCards[cardId].flipped = false;
+        gameBoard[currentCard.id].flipped = false;
+        // Clears current card if there are no matches
+        currentCard.id = '';
+        currentCard.value = '';
+    }
 }
