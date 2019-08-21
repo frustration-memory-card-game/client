@@ -53,7 +53,10 @@ function startTimer(seconds) {
 function loseGame() {
   alert('You lose!');
   resetGame();
-  clearTimeout();
+  const highestTimeoutId = setTimeout(() => {});
+  for (let i = 0; i < highestTimeoutId; i++) {
+    clearTimeout(i);
+  }
   startTimer(GAME_SECONDS);
 }
 
@@ -78,24 +81,27 @@ function resetGame() {
 function flipCard(cardId) {
   const currentFirstCard = firstCard;
 
-  // Flips selected card
-  gameCards[cardId].flipped = !gameCards[cardId].flipped;
-  setCardVisuals(cardId);
   // Checks if first card
-  if (gameCards[cardId].flipped) {
+  if (!gameCards[cardId].flipped) {
+    // Flips selected card
+    gameCards[cardId].flipped = !gameCards[cardId].flipped;
+    setCardVisuals(cardId);
+
     if (firstCard === -1) {
       // Sets selected card as current card
       firstCard = cardId;
       console.log(`Setting new card`);
       console.log(firstCard);
-    } else if (gameCards[firstCard].value.rank === gameCards[cardId].value.rank) {
+      return;
+    }
+
+    if (gameCards[firstCard].value.rank === gameCards[cardId].value.rank) {
       // Checks if card matchs current card
       // TODO: Pass up shown as an attribute
       gameCards[cardId].shown = false;
       gameCards[firstCard].shown = false;
       gameCards[cardId].flipped = false;
       gameCards[firstCard].flipped = false;
-      setTimeout(() => setCardVisuals(currentFirstCard), 500);
       // clear current card
       // make both cards disappear
       firstCard = -1;
@@ -105,18 +111,24 @@ function flipCard(cardId) {
       // Flips current card and selected card "face down"
       gameCards[cardId].flipped = false;
       gameCards[firstCard].flipped = false;
-      setTimeout(() => setCardVisuals(currentFirstCard), 500);
       // Clears current card if there are no matches
       firstCard = -1;
       console.log('No match');
     }
 
-    setTimeout(() => setCardVisuals(cardId), 500);
+    setTimeout(() => {
+      setCardVisuals(cardId);
+      setCardVisuals(currentFirstCard);
+    }, 500);
   }
+
   if (checkWin()) {
-    alert(`You won!  You sly dog!\nScore: ${document.getElementById('timer').innerHTML}`);
+    alert(`You won! You sly dog!\nScore: ${document.getElementById('timer').innerHTML}`);
     resetGame();
-    clearTimeout();
+    const highestTimeoutId = setTimeout(() => {});
+    for (let i = 0; i < highestTimeoutId; i++) {
+      clearTimeout(i);
+    }
     startTimer(GAME_SECONDS);
   }
 }
