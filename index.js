@@ -1,4 +1,4 @@
-const GAME_SECONDS = 30;
+const GAME_SECONDS = 300;
 class Card {
   constructor(rank, image) {
     this.rank = rank;
@@ -76,61 +76,66 @@ function resetGame() {
 // Function called when a card is clicked
 // The game functions should be in here
 function flipCard(cardId) {
-    // Flips selected card
-    gameCards[cardId].flipped = !gameCards[cardId].flipped;
-    // Checks if first card
-    if(gameCards[cardId].flipped){
-        if(firstCard === -1){
-            // Sets selected card as current card
-            firstCard = cardId;
-            console.log(`Setting new card`);
-            console.log(firstCard);
-        } else if(gameCards[firstCard].value.rank === gameCards[cardId].value.rank ){ //Checks if card matchs current card
-            // TODO: Pass up shown as an attribute
-            gameCards[cardId].shown = false;
-            gameCards[firstCard].shown = false;  
-            gameCards[cardId].flipped = false;
-            gameCards[firstCard].flipped = false;
-            setCardVisuals(firstCard);  
-            // clear current card
-            // make both cards disappear
-            firstCard = -1;
-            console.log('Cards matched');
-            console.log('Makes both cards disappear');
-        } else {
-            // Flips current card and selected card "face down"
-            gameCards[cardId].flipped = false;
-            gameCards[firstCard].flipped = false;
-            setCardVisuals(firstCard);
-            // Clears current card if there are no matches
-            firstCard = -1;
-            console.log('No match');
-        }
+  const currentFirstCard = firstCard;
 
-        setCardVisuals(cardId);
-    } 
-    if(checkWin()){
-        alert(`You won!  You sly dog!\nScore: ${document.getElementById('timer').innerHTML}`);
-        resetGame();
-        clearTimeout();
-        startTimer(GAME_SECONDS);
+  // Flips selected card
+  gameCards[cardId].flipped = !gameCards[cardId].flipped;
+  setCardVisuals(cardId);
+  // Checks if first card
+  if (gameCards[cardId].flipped) {
+    if (firstCard === -1) {
+      // Sets selected card as current card
+      firstCard = cardId;
+      console.log(`Setting new card`);
+      console.log(firstCard);
+    } else if (gameCards[firstCard].value.rank === gameCards[cardId].value.rank) {
+      // Checks if card matchs current card
+      // TODO: Pass up shown as an attribute
+      gameCards[cardId].shown = false;
+      gameCards[firstCard].shown = false;
+      gameCards[cardId].flipped = false;
+      gameCards[firstCard].flipped = false;
+      setTimeout(() => setCardVisuals(currentFirstCard), 500);
+      // clear current card
+      // make both cards disappear
+      firstCard = -1;
+      console.log('Cards matched');
+      console.log('Makes both cards disappear');
+    } else {
+      // Flips current card and selected card "face down"
+      gameCards[cardId].flipped = false;
+      gameCards[firstCard].flipped = false;
+      setTimeout(() => setCardVisuals(currentFirstCard), 500);
+      // Clears current card if there are no matches
+      firstCard = -1;
+      console.log('No match');
     }
-}
 
+    setTimeout(() => setCardVisuals(cardId), 500);
+  }
+  if (checkWin()) {
+    alert(`You won!  You sly dog!\nScore: ${document.getElementById('timer').innerHTML}`);
+    resetGame();
+    clearTimeout();
+    startTimer(GAME_SECONDS);
+  }
+}
 
 // Changes the card picture depending on its flipped status
 function setCardVisuals(cardId) {
-    const card = document.getElementById(`card${cardId}`);
-    if (gameCards[cardId].flipped) {
-      card.style = `background: no-repeat center/100% 100% url(${deck[cardId].image}); color: transparent;`;
-    } else {
-      card.style = '';
-    }
-    if (!gameCards[cardId].shown) {
-        card.style = `visibility: hidden`;
-    } 
+  const card = document.getElementById(`card${cardId}`);
+  if (gameCards[cardId].flipped) {
+    card.style = `background: no-repeat center/100% 100% url(${
+      deck[cardId].image
+    }); color: transparent;`;
+  } else {
+    card.style = '';
   }
+  if (!gameCards[cardId].shown) {
+    card.style = `visibility: hidden`;
+  }
+}
 
-  function checkWin(){
-      return gameCards.every(info => !info.shown);
-  }
+function checkWin() {
+  return gameCards.every(info => !info.shown);
+}
