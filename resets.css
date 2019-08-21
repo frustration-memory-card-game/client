@@ -2,7 +2,10 @@ body,
 header,
 main,
 h1,
-h2 {
+h2,
+header,
+body,
+html {
   margin: 0;
   padding: 0;
 }

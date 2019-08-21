@@ -46,7 +46,7 @@ function startTimer(seconds) {
       timer.innerHTML = i;
     }, (seconds - i) * 1000);
   }
-  setTimeout(loseGame, seconds * 1000 + 100);
+  setTimeout(/** loseGame*/ () => {}, seconds * 1000 + 100);
 }
 
 // Alerts the player that they lost
@@ -110,22 +110,6 @@ function flipCard(cardId) {
     // ELSE it justs turns back face down
 }
 
-// Resets the game
-// Shuffles the deck and resets timer
-function updateGameBoard(cardId) {
-    gameBoard.innerHTML = '';
-    deck = deck.sort(() => Math.random() - 0.5);
-    for (let i = 0; i < 12; i++) {
-
-      const card = document.createElement('div');
-      card.id = `card${i}`;
-      card.addEventListener('click', () => flipCard(i));
-      card.innerHTML = i;
-      gameBoard.appendChild(card);
-      gameCards[i] = new CardInfo(i, deck[i]);
-    }
-    console.log(gameCards);
-  }
 
 // Changes the card picture depending on its flipped status
 function setFlipPic(cardId) {
