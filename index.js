@@ -45,7 +45,7 @@ function startTimer(seconds) {
       timer.innerHTML = i;
     }, (seconds - i) * 1000);
   }
-  setTimeout(loseGame, seconds * 1000 + 100);
+  setTimeout(/** loseGame*/ () => {}, seconds * 1000 + 100);
 }
 
 // Alerts the player that they lost
