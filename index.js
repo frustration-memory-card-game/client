@@ -1,4 +1,4 @@
-const GAME_SECONDS = 5;
+const GAME_SECONDS = 30;
 class Card {
   constructor(rank, image) {
     this.rank = rank;
