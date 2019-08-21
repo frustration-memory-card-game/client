@@ -29,7 +29,7 @@ const cardValues = [
   new Card('lofi', '/img/lofi.jpg'),
   new Card('robot', 'img/robot.jpg')
 ];
-let firstCard;
+let firstCard = -1;
 
 // Create our deck
 let deck = [...cardValues, ...cardValues];
@@ -77,46 +77,50 @@ function resetGame() {
 function flipCard(cardId) {
     // Flips selected card
     gameCards[cardId].flipped = !gameCards[cardId].flipped;
-    setFlipPic(cardId);
     // Checks if first card
-    if(gameCards[cardId].flipped === true){
-        if(firstCard !== -1){
+    if(gameCards[cardId].flipped){
+        if(firstCard === -1){
             // Sets selected card as current card
             firstCard = cardId;
             console.log(`Setting new card`);
             console.log(firstCard);
         } else if(gameCards[firstCard].value.rank === gameCards[cardId].value.rank ){ //Checks if card matchs current card
-            // make both cards disappear
-            setFlipPic(cardId);
-            setFlipPic(firstCard);
             // TODO: Pass up shown as an attribute
             gameCards[cardId].shown = false;
             gameCards[firstCard].shown = false;  
             gameCards[cardId].flipped = false;
-            gameCards[firstCard].flipped = false;  
+            gameCards[firstCard].flipped = false;
+            setCardVisuals(firstCard);  
             // clear current card
-            delete firstCard;
+            // make both cards disappear
+            firstCard = -1;
+            console.log('Cards matched');
             console.log('Makes both cards disappear');
         } else {
             // Flips current card and selected card "face down"
             gameCards[cardId].flipped = false;
-            console.log(`Current Card: ${firstCard}`);
             gameCards[firstCard].flipped = false;
+            setCardVisuals(firstCard);
             // Clears current card if there are no matches
-            delete firstCard;
+            firstCard = -1;
             console.log('No match');
         }
+
+        setCardVisuals(cardId);
     } 
     // ELSE it justs turns back face down
 }
 
 
 // Changes the card picture depending on its flipped status
-function setFlipPic(cardId) {
+function setCardVisuals(cardId) {
     const card = document.getElementById(`card${cardId}`);
     if (gameCards[cardId].flipped) {
       card.style = `background: no-repeat center/100% 100% url(${deck[cardId].image}); color: transparent;`;
     } else {
       card.style = '';
     }
+    if (!gameCards[cardId].shown) {
+        card.style = `visibility: hidden`;
+    } 
   }
