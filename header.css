@@ -1,7 +1,7 @@
 header {
   font-size: 1.5rem;
   height: 10vh;
-  background-color: pink;
+  background-color: var(--frustration-main);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -11,4 +11,8 @@ header {
 .timer {
   font-weight: bold;
   font-size: 3rem;
+}
+
+.headerLogo {
+  width: 2.2rem;
 }
