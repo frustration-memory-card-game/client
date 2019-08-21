@@ -1,4 +1,4 @@
-const GAME_SECONDS = 5;
+const GAME_SECONDS = 30;
 class Card {
   constructor(rank, image) {
     this.rank = rank;
@@ -8,7 +8,7 @@ class Card {
 
 class CardInfo {
   constructor(cardId, value, howToFlip = '', flipped = false, shown = true) {
-    this.id = `card${cardId}`;
+    this.id = cardId;
     this.value = value;
     this.howToFlip = howToFlip;
     this.flipped = flipped;
@@ -22,13 +22,14 @@ const gameBoard = document.getElementById('gameBoard');
 // Initializes cards and values
 const gameCards = [];
 const cardValues = [
-  new Card('king', '/img/king.jpg'),
+  new Card('king', '/img/king.webp'),
   new Card('queen', '/img/queen.jpg'),
-  new Card('joker', '/img/joker.jpg'),
+  new Card('joker', '/img/joker.webp'),
   new Card('burger', '/img/burger.jpg'),
   new Card('lofi', '/img/lofi.jpg'),
   new Card('robot', 'img/robot.jpg')
 ];
+let firstCard = -1;
 
 // Create our deck
 let deck = [...cardValues, ...cardValues];
@@ -45,13 +46,14 @@ function startTimer(seconds) {
       timer.innerHTML = i;
     }, (seconds - i) * 1000);
   }
-  setTimeout(/** loseGame*/ () => {}, seconds * 1000 + 100);
+  setTimeout(loseGame, seconds * 1000 + 100);
 }
 
 // Alerts the player that they lost
 function loseGame() {
   alert('You lose!');
   resetGame();
+  clearTimeout();
   startTimer(GAME_SECONDS);
 }
 
@@ -74,5 +76,61 @@ function resetGame() {
 // Function called when a card is clicked
 // The game functions should be in here
 function flipCard(cardId) {
-  console.log(cardId);
+    // Flips selected card
+    gameCards[cardId].flipped = !gameCards[cardId].flipped;
+    // Checks if first card
+    if(gameCards[cardId].flipped){
+        if(firstCard === -1){
+            // Sets selected card as current card
+            firstCard = cardId;
+            console.log(`Setting new card`);
+            console.log(firstCard);
+        } else if(gameCards[firstCard].value.rank === gameCards[cardId].value.rank ){ //Checks if card matchs current card
+            // TODO: Pass up shown as an attribute
+            gameCards[cardId].shown = false;
+            gameCards[firstCard].shown = false;  
+            gameCards[cardId].flipped = false;
+            gameCards[firstCard].flipped = false;
+            setCardVisuals(firstCard);  
+            // clear current card
+            // make both cards disappear
+            firstCard = -1;
+            console.log('Cards matched');
+            console.log('Makes both cards disappear');
+        } else {
+            // Flips current card and selected card "face down"
+            gameCards[cardId].flipped = false;
+            gameCards[firstCard].flipped = false;
+            setCardVisuals(firstCard);
+            // Clears current card if there are no matches
+            firstCard = -1;
+            console.log('No match');
+        }
+
+        setCardVisuals(cardId);
+    } 
+    if(checkWin()){
+        alert(`You won!  You sly dog!\nScore: ${document.getElementById('timer').innerHTML}`);
+        resetGame();
+        clearTimeout();
+        startTimer(GAME_SECONDS);
+    }
 }
+
+
+// Changes the card picture depending on its flipped status
+function setCardVisuals(cardId) {
+    const card = document.getElementById(`card${cardId}`);
+    if (gameCards[cardId].flipped) {
+      card.style = `background: no-repeat center/100% 100% url(${deck[cardId].image}); color: transparent;`;
+    } else {
+      card.style = '';
+    }
+    if (!gameCards[cardId].shown) {
+        card.style = `visibility: hidden`;
+    } 
+  }
+
+  function checkWin(){
+      return gameCards.every(info => !info.shown);
+  }
