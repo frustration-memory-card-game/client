@@ -1,4 +1,4 @@
-const GAME_SECONDS = 500;
+const GAME_SECONDS = 5;
 class Card {
   constructor(rank, image) {
     this.rank = rank;
@@ -46,13 +46,14 @@ function startTimer(seconds) {
       timer.innerHTML = i;
     }, (seconds - i) * 1000);
   }
-  setTimeout(/** loseGame*/ () => {}, seconds * 1000 + 100);
+  setTimeout(loseGame, seconds * 1000 + 100);
 }
 
 // Alerts the player that they lost
 function loseGame() {
   alert('You lose!');
   resetGame();
+  clearTimeout();
   startTimer(GAME_SECONDS);
 }
 
@@ -108,7 +109,12 @@ function flipCard(cardId) {
 
         setCardVisuals(cardId);
     } 
-    // ELSE it justs turns back face down
+    if(checkWin()){
+        alert(`You won!  You sly dog!\nScore: ${document.getElementById('timer').innerHTML}`);
+        resetGame();
+        clearTimeout();
+        startTimer(GAME_SECONDS);
+    }
 }
 
 
@@ -123,4 +129,8 @@ function setCardVisuals(cardId) {
     if (!gameCards[cardId].shown) {
         card.style = `visibility: hidden`;
     } 
+  }
+
+  function checkWin(){
+      return gameCards.every(info => !info.shown);
   }
