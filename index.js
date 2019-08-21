@@ -1,4 +1,4 @@
-const GAME_SECONDS = 5;
+const GAME_SECONDS = 500;
 class Card {
   constructor(rank, image) {
     this.rank = rank;
@@ -8,7 +8,7 @@ class Card {
 
 class CardInfo {
   constructor(cardId, value, howToFlip = '', flipped = false, shown = true) {
-    this.id = `card${cardId}`;
+    this.id = cardId;
     this.value = value;
     this.howToFlip = howToFlip;
     this.flipped = flipped;
@@ -22,17 +22,14 @@ const gameBoard = document.getElementById('gameBoard');
 // Initializes cards and values
 const gameCards = [];
 const cardValues = [
-  new Card('king', '/img/king.jpg'),
+  new Card('king', '/img/king.webp'),
   new Card('queen', '/img/queen.jpg'),
-  new Card('joker', '/img/joker.jpg'),
+  new Card('joker', '/img/joker.webp'),
   new Card('burger', '/img/burger.jpg'),
   new Card('lofi', '/img/lofi.jpg'),
   new Card('robot', 'img/robot.jpg')
 ];
-let currentCard = {
-    id: '',
-    value: '',
-};
+let firstCard;
 
 // Create our deck
 let deck = [...cardValues, ...cardValues];
@@ -78,31 +75,64 @@ function resetGame() {
 // Function called when a card is clicked
 // The game functions should be in here
 function flipCard(cardId) {
-    console.log(gameCards[cardId]);
-    console.log(gameCards[cardId].value.rank);
-    // Flips selected card face up
-    gameCards[cardId].flipped = true;
+    // Flips selected card
+    gameCards[cardId].flipped = !gameCards[cardId].flipped;
+    setFlipPic(cardId);
     // Checks if first card
-    if(currentCard.value === ''){
-        // Sets selected card as current card
-        currentCard.value = gameCards[cardId].value.rank;
-        currentCard.id = cardId;
-    } else if(currentCard.value === gameCards[cardId].value.rank ){ //Checks if card matchs current card
-        // make both cards disappear
-        // TODO: Pass up shown as an attribute
-        gameCards[cardId].shown = false;
-        gameBoard[currentCard.id].shown = false;  
-        gameCards[cardId].flipped = false;
-        gameBoard[currentCard.id].flipped = false;  
-        // clear current card
-        currentCard.id = '';
-        currentCard.value = '';
-    } else {
-        // Flips current card and selected card "face down"
-        gameCards[cardId].flipped = false;
-        gameBoard[currentCard.id].flipped = false;
-        // Clears current card if there are no matches
-        currentCard.id = '';
-        currentCard.value = '';
-    }
+    if(gameCards[cardId].flipped === true){
+        if(firstCard !== -1){
+            // Sets selected card as current card
+            firstCard = cardId;
+            console.log(`Setting new card`);
+            console.log(firstCard);
+        } else if(gameCards[firstCard].value.rank === gameCards[cardId].value.rank ){ //Checks if card matchs current card
+            // make both cards disappear
+            setFlipPic(cardId);
+            setFlipPic(firstCard);
+            // TODO: Pass up shown as an attribute
+            gameCards[cardId].shown = false;
+            gameCards[firstCard].shown = false;  
+            gameCards[cardId].flipped = false;
+            gameCards[firstCard].flipped = false;  
+            // clear current card
+            delete firstCard;
+            console.log('Makes both cards disappear');
+        } else {
+            // Flips current card and selected card "face down"
+            gameCards[cardId].flipped = false;
+            console.log(`Current Card: ${firstCard}`);
+            gameCards[firstCard].flipped = false;
+            // Clears current card if there are no matches
+            delete firstCard;
+            console.log('No match');
+        }
+    } 
+    // ELSE it justs turns back face down
 }
+
+// Resets the game
+// Shuffles the deck and resets timer
+function updateGameBoard(cardId) {
+    gameBoard.innerHTML = '';
+    deck = deck.sort(() => Math.random() - 0.5);
+    for (let i = 0; i < 12; i++) {
+
+      const card = document.createElement('div');
+      card.id = `card${i}`;
+      card.addEventListener('click', () => flipCard(i));
+      card.innerHTML = i;
+      gameBoard.appendChild(card);
+      gameCards[i] = new CardInfo(i, deck[i]);
+    }
+    console.log(gameCards);
+  }
+
+// Changes the card picture depending on its flipped status
+function setFlipPic(cardId) {
+    const card = document.getElementById(`card${cardId}`);
+    if (gameCards[cardId].flipped) {
+      card.style = `background: no-repeat center/100% 100% url(${deck[cardId].image}); color: transparent;`;
+    } else {
+      card.style = '';
+    }
+  }
