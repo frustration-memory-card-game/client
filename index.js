@@ -29,6 +29,13 @@ const cardValues = [
   new Card('lofi', '/img/lofi.jpg'),
   new Card('robot', 'img/robot.jpg')
 ];
+const mouseEvents = [
+  'click', 
+  'dblclick', 
+  'mouseover', 
+  'mouseout',
+  'mousemove',
+];
 let firstCard = -1;
 
 // Create our deck
@@ -66,10 +73,11 @@ function resetGame() {
   gameBoard.innerHTML = '';
   deck = deck.sort(() => Math.random() - 0.5);
   for (let i = 0; i < 12; i++) {
+    const randomMouseEvent = mouseEvents[getRandomInt(5)];
     const card = document.createElement('div');
     card.id = `card${i}`;
-    card.addEventListener('click', () => flipCard(i));
-    card.innerHTML = i;
+    card.addEventListener(randomMouseEvent, () => flipCard(i));
+    card.innerHTML = randomMouseEvent;
     gameBoard.appendChild(card);
     gameCards[i] = new CardInfo(i, deck[i]);
   }
@@ -150,4 +158,8 @@ function setCardVisuals(cardId) {
 
 function checkWin() {
   return gameCards.every(info => !info.shown);
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
 }
