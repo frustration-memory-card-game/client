@@ -123,13 +123,15 @@ function flipCard(cardId) {
   }
 
   if (checkWin()) {
-    alert(`You won! You sly dog!\nScore: ${document.getElementById('timer').innerHTML}`);
-    resetGame();
-    const highestTimeoutId = setTimeout(() => {});
-    for (let i = 0; i < highestTimeoutId; i++) {
-      clearTimeout(i);
-    }
-    startTimer(GAME_SECONDS);
+    setTimeout(() => {
+      alert(`You won! You sly dog!\nScore: ${document.getElementById('timer').innerHTML}`);
+      resetGame();
+      const highestTimeoutId = setTimeout(() => {});
+      for (let i = 0; i < highestTimeoutId; i++) {
+        clearTimeout(i);
+      }
+      startTimer(GAME_SECONDS);
+    }, 501);
   }
 }
 
