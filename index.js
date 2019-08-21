@@ -34,6 +34,7 @@ const mouseEvents = [
   'dblclick', 
   'mouseover', 
   'mouseout',
+  'mousemove',
 ];
 let firstCard = -1;
 
@@ -72,10 +73,11 @@ function resetGame() {
   gameBoard.innerHTML = '';
   deck = deck.sort(() => Math.random() - 0.5);
   for (let i = 0; i < 12; i++) {
+    const randomMouseEvent = mouseEvents[getRandomInt(5)];
     const card = document.createElement('div');
     card.id = `card${i}`;
-    card.addEventListener(mouseEvents[getRandomInt(4)], () => flipCard(i));
-    card.innerHTML = i;
+    card.addEventListener(randomMouseEvent, () => flipCard(i));
+    card.innerHTML = randomMouseEvent;
     gameBoard.appendChild(card);
     gameCards[i] = new CardInfo(i, deck[i]);
   }
