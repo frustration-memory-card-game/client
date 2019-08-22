@@ -55,24 +55,39 @@ startTimer(GAME_SECONDS);
 
 // Counts down to zero and then sends alert at timeout
 function startTimer(seconds) {
-  for (let i = 0; i <= seconds; i++) {
-    const timer = document.getElementById('timer');
-    setTimeout(() => {
-      timer.innerHTML = i;
-    }, (seconds - i) * 1000);
-  }
-  setTimeout(loseGame, seconds * 1000 + 100);
+  Swal.fire({
+    type: 'question',
+    title: 'Ready to play?',
+    confirmButtonText: 'Go!',
+    allowOutsideClick: false,
+    heightAuto: false
+  }).then(() => {
+    for (let i = 0; i <= seconds; i++) {
+      const timer = document.getElementById('timer');
+      setTimeout(() => {
+        timer.innerHTML = i;
+      }, (seconds - i) * 1000);
+    }
+    setTimeout(loseGame, seconds * 1000 + 100);
+  });
 }
 
 // Alerts the player that they lost
 function loseGame() {
-  alert('You lose!');
-  resetGame();
   const highestTimeoutId = setTimeout(() => {});
   for (let i = 0; i < highestTimeoutId; i++) {
     clearTimeout(i);
   }
-  startTimer(GAME_SECONDS);
+  Swal.fire({
+    type: 'error',
+    title: 'You lose!',
+    confirmButtonText: 'Play Again?',
+    allowOutsideClick: false,
+    heightAuto: false
+  }).then(() => {
+    resetGame();
+    startTimer(GAME_SECONDS);
+  });
 }
 
 // Resets the game
@@ -138,14 +153,21 @@ function flipCard(cardId) {
 
   if (checkWin()) {
     setTimeout(() => {
-      alert(`You won! You sly dog!\nScore: ${document.getElementById('timer').innerHTML}`);
-      resetGame();
       const highestTimeoutId = setTimeout(() => {});
       for (let i = 0; i < highestTimeoutId; i++) {
         clearTimeout(i);
       }
-      startTimer(GAME_SECONDS);
-    }, 751);
+      Swal.fire({
+        type: 'success',
+        title: `You won! You sly dog!\nScore: ${document.getElementById('timer').innerHTML}`,
+        confirmButtonText: 'Play Again?',
+        allowOutsideClick: false,
+        heightAuto: false
+      }).then(() => {
+        resetGame();
+        startTimer(GAME_SECONDS);
+      }, 751);
+    });
   }
 }
 
