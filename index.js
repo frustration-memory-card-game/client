@@ -34,13 +34,13 @@ let mouseEvents = [
   'click',
   'dblclick',
   'mouseover',
-  'dblclick',
+  'C',
+  'click',
+  'Q',
+  'S',
+  'L',
   'click',
   'click',
-  'mouseover',
-  'mouseover',
-  'click',
-  'dblclick',
   'dblclick',
   'mouseover'
 ];
@@ -100,13 +100,22 @@ function resetGame() {
     const randomMouseEvent = mouseEvents[i];
     const card = document.createElement('div');
     card.id = `card${i}`;
-    card.addEventListener(randomMouseEvent, () => flipCard(i));
     if (randomMouseEvent === 'dblclick') {
+      card.addEventListener(randomMouseEvent, () => flipCard(i));
       card.innerHTML = '🖱🖱';
     } else if (randomMouseEvent === 'click') {
+      card.addEventListener(randomMouseEvent, () => flipCard(i));
       card.innerHTML = '🖱';
-    } else {
+    } else if (randomMouseEvent === 'mouseover') {
+      card.addEventListener(randomMouseEvent, () => flipCard(i));
       card.innerHTML = '☜☞';
+    } else {
+      document.addEventListener('keydown', event => {
+        if (event.keyCode === randomMouseEvent.toUpperCase().charCodeAt(0)) {
+          flipCard(i);
+        }
+      });
+      card.innerHTML = randomMouseEvent;
     }
     gameBoard.appendChild(card);
     gameCards[i] = new CardInfo(i, deck[i]);
