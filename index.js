@@ -1,4 +1,5 @@
-const GAME_SECONDS = 300;
+const GAME_SECONDS = 30;
+
 class Card {
   constructor(rank, image) {
     this.rank = rank;
@@ -29,12 +30,19 @@ const cardValues = [
   new Card('lofi', '/img/lofi.jpg'),
   new Card('robot', 'img/robot.jpg')
 ];
-const mouseEvents = [
-  'click', 
-  'dblclick', 
-  'mouseover', 
-  'mouseout',
-  'mousemove',
+let mouseEvents = [
+  'click',
+  'dblclick',
+  'mouseover',
+  'dblclick',
+  'click',
+  'click',
+  'mouseover',
+  'mouseover',
+  'click',
+  'dblclick',
+  'dblclick',
+  'mouseover'
 ];
 let firstCard = -1;
 
@@ -72,16 +80,22 @@ function loseGame() {
 function resetGame() {
   gameBoard.innerHTML = '';
   deck = deck.sort(() => Math.random() - 0.5);
+  mouseEvents = mouseEvents.sort(() => Math.random() - 0.5);
   for (let i = 0; i < 12; i++) {
-    const randomMouseEvent = mouseEvents[getRandomInt(5)];
+    const randomMouseEvent = mouseEvents[i];
     const card = document.createElement('div');
     card.id = `card${i}`;
     card.addEventListener(randomMouseEvent, () => flipCard(i));
-    card.innerHTML = randomMouseEvent;
+    if (randomMouseEvent === 'dblclick') {
+      card.innerHTML = '🖱🖱';
+    } else if (randomMouseEvent === 'click') {
+      card.innerHTML = '🖱';
+    } else {
+      card.innerHTML = '☜☞';
+    }
     gameBoard.appendChild(card);
     gameCards[i] = new CardInfo(i, deck[i]);
   }
-  console.log(gameCards);
 }
 
 // Function called when a card is clicked
@@ -89,45 +103,37 @@ function resetGame() {
 function flipCard(cardId) {
   const currentFirstCard = firstCard;
 
-  // Checks if first card
   if (!gameCards[cardId].flipped) {
     // Flips selected card
     gameCards[cardId].flipped = !gameCards[cardId].flipped;
     setCardVisuals(cardId);
 
+    // Checks if this card is first card
     if (firstCard === -1) {
-      // Sets selected card as current card
+      // Remembers this card as the first card
       firstCard = cardId;
-      console.log(`Setting new card`);
-      console.log(firstCard);
       return;
     }
 
+    // Checks if card matchs first card
     if (gameCards[firstCard].value.rank === gameCards[cardId].value.rank) {
-      // Checks if card matchs current card
-      // TODO: Pass up shown as an attribute
       gameCards[cardId].shown = false;
       gameCards[firstCard].shown = false;
-      gameCards[cardId].flipped = false;
-      gameCards[firstCard].flipped = false;
       // clear current card
       // make both cards disappear
       firstCard = -1;
-      console.log('Cards matched');
-      console.log('Makes both cards disappear');
     } else {
       // Flips current card and selected card "face down"
       gameCards[cardId].flipped = false;
       gameCards[firstCard].flipped = false;
       // Clears current card if there are no matches
       firstCard = -1;
-      console.log('No match');
     }
 
     setTimeout(() => {
       setCardVisuals(cardId);
       setCardVisuals(currentFirstCard);
-    }, 500);
+    }, 750);
   }
 
   if (checkWin()) {
@@ -139,7 +145,7 @@ function flipCard(cardId) {
         clearTimeout(i);
       }
       startTimer(GAME_SECONDS);
-    }, 501);
+    }, 751);
   }
 }
 
@@ -147,10 +153,12 @@ function flipCard(cardId) {
 function setCardVisuals(cardId) {
   const card = document.getElementById(`card${cardId}`);
   if (gameCards[cardId].flipped) {
-    card.style = `background: no-repeat center/100% 100% url(${
+    card.classList.add('flip');
+    card.style = `transform: rotateY(180deg); background: no-repeat center/100% 100% url(${
       deck[cardId].image
     }); color: transparent;`;
   } else {
+    card.classList.remove('flip');
     card.style = '';
   }
   if (!gameCards[cardId].shown) {
@@ -160,8 +168,4 @@ function setCardVisuals(cardId) {
 
 function checkWin() {
   return gameCards.every(info => !info.shown);
-}
-
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
 }

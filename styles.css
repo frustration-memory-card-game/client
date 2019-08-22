@@ -2,10 +2,12 @@
 @import 'header.css';
 @import 'footer.css';
 @import 'palette.css';
+@import url('https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap');
 
 html {
-  font-size: 3vmin;
+  font-size: 1.25vw;
   height: 100%;
+  font-family: 'Permanent Marker', cursive;
 }
 
 .cards {
@@ -15,24 +17,29 @@ html {
   grid-column-gap: 2.5vw;
   place-items: center;
   place-content: center;
-  height: 100%;    
+  height: 100%;
 }
 
 .cards > div {
   background: no-repeat center/100% 100% url(/img/cardback.png);
-  height: 10vh;
+  height: 17.5vh;
   width: 17vw;
-  padding-top: 40px;
   text-align: center;
   color: white;
   border: solid 10px var(--frustration-main);
   border-radius: 10px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-  font-size: 1.25rem;
+  font-size: 4rem;
   user-select: none;
+  transform-style: preserve-3d;
+  transition: transform 0.8s ease, background 0.8s ease;
 }
 
-.gameArea{
+.flip {
+  transform: rotateY(180deg);
+}
+
+.gameArea {
   display: grid;
   background-image: url(./img/trinitybackgroundwhite.png);
   height: 100%;

@@ -8,11 +8,20 @@ header {
   padding: 0 1.5rem;
 }
 
+.logoSection {
+  display: flex;
+  justify-content: left;
+  align-content: center;
+  align-items: center;
+}
+
 .timer {
   font-weight: bold;
   font-size: 3rem;
+  color: #ff4136;
 }
 
 .headerLogo {
   width: 2.2rem;
+  margin-right: 0.5rem;
 }
