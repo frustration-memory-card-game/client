@@ -18,7 +18,13 @@ class CardInfo {
 }
 
 const flipSound = new Audio('/sound/flip.wav');
+const matchSound = new Audio('/sound/match.mp3');
+const wrongSound = new Audio('/sound/wrong.mp3');
+const sameSound = new Audio('/sound/same.mp3');
+const winSound = new Audio('/sound/win.mp3');
+const loseSound = new Audio('/sound/lose.mp3');
 
+let listeners = [];
 // Gets game board from our html
 const gameBoard = document.getElementById('gameBoard');
 
@@ -76,6 +82,7 @@ function startTimer(seconds) {
 
 // Alerts the player that they lost
 function loseGame() {
+  loseSound.play();
   const highestTimeoutId = setTimeout(() => {});
   for (let i = 0; i < highestTimeoutId; i++) {
     clearTimeout(i);
@@ -95,6 +102,10 @@ function loseGame() {
 // Resets the game
 // Shuffles the deck and resets timer
 function resetGame() {
+  for (let i = 0; i < listeners.length; i++) {
+    document.removeEventListener('keydown', listeners[i]);
+  }
+  listeners = [];
   gameBoard.innerHTML = '';
   deck = deck.sort(() => Math.random() - 0.5);
   mouseEvents = mouseEvents.sort(() => Math.random() - 0.5);
@@ -112,11 +123,13 @@ function resetGame() {
       card.addEventListener(randomMouseEvent, () => flipCard(i));
       card.innerHTML = '☜☞';
     } else {
-      document.addEventListener('keydown', event => {
+      const _listener = event => {
         if (event.keyCode === randomMouseEvent.toUpperCase().charCodeAt(0)) {
           flipCard(i);
         }
-      });
+      };
+      document.addEventListener('keydown', _listener);
+      listeners.push(_listener);
       card.innerHTML = randomMouseEvent;
     }
     gameBoard.appendChild(card);
@@ -162,10 +175,13 @@ function flipCard(cardId) {
       setCardVisuals(cardId);
       setCardVisuals(currentFirstCard);
     }, 750);
+  } else {
+    sameSound.play();
   }
 
   if (checkWin()) {
     setTimeout(() => {
+      winSound.play();
       const highestTimeoutId = setTimeout(() => {});
       for (let i = 0; i < highestTimeoutId; i++) {
         clearTimeout(i);
@@ -179,8 +195,8 @@ function flipCard(cardId) {
       }).then(() => {
         resetGame();
         startTimer(GAME_SECONDS);
-      }, 751);
-    });
+      });
+    }, 751);
   }
 }
 
@@ -193,10 +209,12 @@ function setCardVisuals(cardId) {
       deck[cardId].image
     }); color: transparent;`;
   } else {
+    wrongSound.play();
     card.classList.remove('flip');
     card.style = '';
   }
   if (!gameCards[cardId].shown) {
+    matchSound.play();
     card.style = `visibility: hidden`;
   }
 }
