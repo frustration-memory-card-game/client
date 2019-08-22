@@ -17,6 +17,8 @@ class CardInfo {
   }
 }
 
+const flipSound = new Audio('/sound/flip.wav');
+
 // Gets game board from our html
 const gameBoard = document.getElementById('gameBoard');
 
@@ -128,6 +130,8 @@ function flipCard(cardId) {
   const currentFirstCard = firstCard;
 
   if (!gameCards[cardId].flipped) {
+    flipSound.play();
+
     // Flips selected card
     gameCards[cardId].flipped = !gameCards[cardId].flipped;
     setCardVisuals(cardId);
